@@ -1,0 +1,12 @@
+Move command help to the help menu. 
+Make window dragable. 
+Make minimize, maximize and close buttons usable. 
+Make windows desktop with Windows menu, taskbar, display real time, add shortcuts in the desktop. 
+Make other games once you close the main game menu. 
+
+Desktop Shortcuts:
+Cabin in the woods.exe
+Play screensaver
+Calculator
+Minesweeper
+patients
