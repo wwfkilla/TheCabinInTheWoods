@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cabin in the Woods</title>
+    <style>
+body {
+    margin: 0;
+    padding: 0;
+    background: #008080; /* Windows 98 desktop color */
+    font-family: 'MS Sans Serif', Arial, sans-serif;
+    overflow: hidden;
+}
+
+.desktop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('win98bg.jpg'); /* Optional: Add a Windows 98 background image */
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.window {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 600px;
+    height: 400px;
+    background: white;
+    border: 3px solid #000000; /* Black border */
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    /* Increasing the stroke size */
+    outline: 3px solid #C0C0C0;
+}
+
+.title-bar {
+    height: 23px;
+    background: linear-gradient(to right,#000080, #0000AA); /* Dark blue to slightly lighter blue */
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+    border-bottom: 1px solid #000000; /* Black border for separation */
+    -webkit-app-region: drag; /* Makes the title bar draggable on webkit browsers */
+}
+
+.title-text {
+    font-size: 14px;
+    -webkit-app-region: no-drag; /* Prevents text from being draggable */
+}
+
+.buttons {
+    display: flex;
+    /* Adjusting the spacing between buttons */
+    gap: 0px; /* No gap between buttons */
+}
+
+.buttons button {
+    font-size: 15px; /* Making the icons bolder by increasing font size */
+    font-weight: bold; /* Making the text bold */
+    background: #C0C0C0; /* Light gray for buttons */
+    border: 1px solid #808080;
+    color: black;
+    cursor: pointer;
+    padding: 0 6px;
+    margin-left: 1px; 
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    -webkit-app-region: no-drag; /* Prevents buttons from being draggable */
+}
+
+/* Ensuring all buttons have consistent styling */
+.buttons .minimize, .buttons .maximize, .buttons .close {
+    background: #C0C0C0;
+}
+
+.menu-bar {
+    height: 20px;
+    background: #C0C0C0; /* Light gray for menu bar */
+    display: flex;
+    padding: 0 5px;
+    border-bottom: 1px solid #808080;
+}
+
+.menu-bar span {
+    padding: 0 10px;
+    line-height: 20px;
+    cursor: pointer;
+    border-right: none; /* Remove vertical separator */
+}
+
+.menu-bar span:last-child {
+    border-right: none; /* This was redundant but kept for consistency */
+}
+
+.content {
+    height: calc(100% - 43px - 20px); /* Subtract title bar and status bar height */
+    background: black;
+    color: #00FF00;
+    padding: 5px;
+    overflow: auto;
+}
+
+#gameOutput {
+    height: calc(100% - 25px); /* Subtract input height */
+    overflow-y: auto;
+    font-family: 'Lucida Console', Monaco, monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#commandInput {
+    width: calc(100% - 10px);
+    background: black;
+    color: #00FF00;
+    border: none;
+    outline: none;
+    font-family: 'Lucida Console', Monaco, monospace;
+    margin-top: 5px;
+}
+
+.status-bar {
+    height: 20px;
+    background: #C0C0C0; /* Light gray for status bar */
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    border-top: 1px solid #808080;
+    font-size: 12px;
+}
+
+.status-right {
+    display: flex;
+    gap: 5px;
+}
+
+</style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="window">
+            <div class="title-bar">
+                <div class="title-text">Command Prompt - The Cabin in the Woods</div>
+                <div class="buttons">
+                    <button class="minimize">_</button>
+                    <button class="maximize">□</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <div class="menu-bar">
+                <span>File</span>
+                <span>Edit</span>
+                <span>Search</span>
+                <span>Help</span>
+            </div>
+            <div class="content">
+                <div id="gameOutput"></div>
+                <input type="text" id="commandInput" placeholder="C:\>">
+            </div>
+        </div>
+    </div> 
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const outputElement = document.getElementById('gameOutput');
+    const inputElement = document.getElementById('commandInput');
+
+    let gameState = {
+        currentScene: 'introduction',
+        tireChecked: false,
+        cabinReached: false,
+        bookRead: false
+    };
+
+    // Focus on the input field when the page loads
+    window.onload = function() {
+        inputElement.focus();
+    };
+
+    function appendOutput(text) {
+        outputElement.innerHTML += text + '<br>';
+        outputElement.scrollTop = outputElement.scrollHeight;
+    }
+
+    function clearChat() {
+        outputElement.innerHTML = ''; // Simply clear the text, no need to worry about input
+    }
+
+    function showCommands(commands) {
+        appendOutput(""); // Adds a line break
+        appendOutput("Available commands: " + commands.join(", "));
+    }
+
+    function typeWriter(text, callback) {
+        let i = 0;
+        let output = '';
+        let span = document.createElement('span');
+        outputElement.appendChild(span);
+        inputElement.disabled = true; // Disable input at the start
+
+        const skipEffect = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                span.textContent = text; // Display all text at once
+                clearInterval(interval); // Stop the typing effect
+                document.removeEventListener('keypress', skipEffect);
+                inputElement.disabled = false; // Re-enable input after skipping
+                inputElement.focus();
+                if (callback) callback();
+            }
+        };
+        document.addEventListener('keypress', skipEffect);
+
+        const interval = setInterval(() => {
+            if (i < text.length) {
+                output += text.charAt(i);
+                span.textContent = output;
+                i++;
+            } else {
+                clearInterval(interval);
+                document.removeEventListener('keypress', skipEffect); // Remove the event listener once typing is done
+                inputElement.disabled = false; // Re-enable input when typing is complete
+                inputElement.focus();
+                if (callback) callback();
+            }
+        }, 50); // Speed of typing
+    }
+
+    // Game logic for different scenes
+    const scenes = {
+        'introduction': () => {
+            clearChat();
+            setTimeout(() => {
+                typeWriter("The hum of your car's engine cuts out abruptly, replaced by the eerie silence of the woods. It's late evening, the sky a bruised purple with the last hint of daylight slipping away.", () => {
+                    appendOutput("");
+                    appendOutput("");
+                    typeWriter("Your car lurches to a standstill on a narrow, unkempt road, barely more than a path, shrouded by towering trees whose branches claw at the sky. The headlights' beams struggle to pierce the growing darkness. You check the dashboard; the lights flicker before dying completely, leaving you in near-total darkness.", () => {
+                        appendOutput("");
+                        appendOutput("");
+                        typeWriter("You're stranded, with no cell service, on a road that seems to lead nowhere. The only sign of life, or perhaps something else, is that distant light.", () => {
+                            appendOutput("");
+                            appendOutput("");
+                            showCommands(['check tire', 'look around', 'walk to light']); 
+                            gameState.currentScene = 'investigation';
+                        });
+                    });
+                });
+            }, 250); // Delay to match the transition duration
+        },
+        'investigation': () => {
+            clearChat();
+            appendOutput("What do you do?");
+            showCommands(['check tire', 'look around', 'walk to light']);
+        },
+        'cabin': () => {
+            clearChat();
+            setTimeout(() => {
+                appendOutput("You trek through the underbrush, towards the light. It's coming from an old, dilapidated cabin.");
+                gameState.currentScene = 'cabin';
+                showCommands(['knock on door', 'peek inside', 'explore cabin']);
+            }, 250);
+        },
+        'exploreCabin': () => {
+            clearChat();
+            setTimeout(() => {
+                appendOutput("Inside, there's a mess of old books, tools, and... a very old, leather-bound book titled 'Necronomicon'.");
+                gameState.currentScene = 'exploreCabin';
+                showCommands(['read book', 'search cabin']);
+            }, 250);
+        },
+        'necronomicon': () => {
+            clearChat();
+            setTimeout(() => {
+                appendOutput("Curiosity gets the better of you. You read aloud from the Necronomicon. The air thickens, and shadows begin to move. Deadites rise from the ground.");
+                showCommands(['search for exit', 'defend']);
+                gameState.currentScene = 'necronomicon';
+            }, 250);
+        },
+        'ending': () => {
+            clearChat();
+            setTimeout(() => {
+                appendOutput("You try to fight back, but what can you do against the undead? The Deadites overwhelm you. Their gnashing teeth and cold, dead hands tear you apart. Your screams are lost in the woods, another soul claimed by the Necronomicon.");
+                inputElement.disabled = true;
+                // No commands available at the end
+            }, 250);
+        }
+    };
+
+    // Command handling
+    inputElement.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            let command = this.value.toLowerCase();
+            this.value = '';
+
+            switch (gameState.currentScene) {
+                case 'investigation':
+                    if (command === 'check tire') {
+                        appendOutput("There's no spare. A nail has punctured it good. You're stuck here.");
+                        gameState.tireChecked = true;
+                        showCommands(['look around', 'walk to light']); // Remove 'check tire' after it's been checked
+                    } else if (command === 'look around') {
+                        appendOutput("The woods are dark. The trees seem to whisper your fate.");
+                    } else if (command === 'walk to light') {
+                        if (gameState.tireChecked) {
+                            scenes.cabin();
+                        } else {
+                            appendOutput("You should probably check that tire first.");
+                        }
+                    } else {
+                        appendOutput("That command doesn't make sense here.");
+                    }
+                    break;
+                case 'cabin':
+                    if (command === 'knock on door') {
+                        appendOutput("No answer. The place feels abandoned.");
+                    } else if (command === 'peek inside') {
+                        appendOutput("Through the dusty window, you see clutter but no signs of life.");
+                    } else if (command === 'explore cabin') {
+                        scenes.exploreCabin();
+                    } else {
+                        appendOutput("That's not something you can do here.");
+                    }
+                    break;
+                case 'exploreCabin':
+                    if (command === 'read book') {
+                        scenes.necronomicon();
+                    } else if (command === 'search cabin') {
+                        appendOutput("You find random old items... but nothing useful.");
+                    } else {
+                        appendOutput("What else do you want to do?");
+                    }
+                    break;
+                case 'necronomicon':
+                    if (command === 'search for exit') {
+                        appendOutput("The door you came through slams shut. There's no way out now.");
+                    } else if (command === 'defend') {
+                        scenes.ending();
+                    } else {
+                        appendOutput("The Deadites are coming closer!");
+                    }
+                    break;
+                case 'ending':
+                    appendOutput("The game is over.");
+                    break;
+                default:
+                    appendOutput("Something went wrong. Please try again.");
+            }
+        }
+    });
+
+    scenes.introduction(); // Start the game
+});
+    </script>
+</body>
+</html>
