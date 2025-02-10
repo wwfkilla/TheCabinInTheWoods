@@ -1,0 +1,92 @@
+narative for Whiteout
+*** modify the basement scene to add garlic in some of the jars in the basement.
+
+Scene 8: The Book of Blood
+Description: As you open the book, an uneasy chill runs down your spine. The pages are brittle, and the ink is faded, but what you can make out is unsettling. 
+The book speaks of ancient creatures that rise from the darkness at night, feasting on the blood of the living. Their hunger is insatiable, and their 
+cruelty knows no bounds. You read of things that can kill them—garlic, silver, and a strange dark ritual—each described in detail, with an air of dread 
+woven between the lines. One page describes a symbol that matches a carving you saw earlier on the cabin walls. Your eyes snap to it in a flash of realization: 
+this place, this book, it's all connected to something ancient and terrifying.
+
+Commands:
+"Read more"
+"Put the book down"
+"Look for clues in the cabin"
+
+Scene 9: The Shadow
+Description: You drop the book in shock, the last words echoing in your mind. As you gather yourself, a shape moves outside the cabin window. It's large, its movements
+swift and unnatural, like something not quite human. Your heart races, but it’s hard to tell what it is. You move closer to the window, breath fogging up the glass.
+There’s something out there, something that’s aware of you. The hairs on the back of your neck stand up, and a primal fear grips you. You turn to leave, but suddenly
+the door slams shut, trapping you inside.
+
+Commands:
+"Try to leave through the window"
+"Investigate the door"
+"Look for something to defend yourself"
+
+Scene 10: The Attack
+Description: Suddenly, the door bursts open, and a dark figure lunges at you. Its eyes glow with a predatory hunger, its fangs bared. You barely manage to step back as it reaches for
+your throat. Panic surges through your veins. In the chaos, your eyes scan for something, anything to fight back with. Then, you remember the garlic in the basement. Grabbing
+a small jar of garlic cloves, you hurl it at the creature. It recoils with a deafening hiss, its skin blistering as the scent burns it. With a final shriek, the creature collapses
+to the floor, its body disintegrating into ash.
+
+Commands:
+"Search the body"
+"Look around the cabin for more clues"
+"Go back to the basement"
+
+Scene 11: The Hidden Passage
+Description: As you catch your breath, you notice something strange behind the bookcase. It’s slightly ajar, and as you push it aside, you reveal a hidden passage. The air is damp and cold,
+and a faint glow seems to emanate from deep below. The wooden stairs creak beneath your feet as you descend into the unknown. The scent of decay and earth fills the air, and the walls seem
+to pulse with a malevolent energy. This passage leads deeper than the cabin’s foundation, as if the house is only a thin shell hiding something far worse beneath. Your heart beats faster as
+you descend, the feeling that something is watching you never leaving.
+
+Commands:
+"Continue down the stairs"
+"Check the walls for inscriptions"
+"Go back to the cabin"
+
+Scene 12: The Labyrinth Beneath
+Description: The stairs lead into an expansive labyrinth beneath the earth. The walls are carved with strange, ancient symbols, and the air is thick with a foul stench. The labyrinth twists
+and turns, and every path you take seems to lead deeper into the darkness. Whispers fill the air, but they don’t come from any living thing. The ground feels unnaturally cold, and you can’t
+shake the feeling that the very earth here is alive, watching you. The path ahead feels like a test, each step bringing you closer to whatever ancient evil lies hidden below.
+
+Commands:
+"Follow the whispers"
+"Investigate the walls"
+"Continue down the labyrinth"
+
+Scene 13: The Heart of Darkness
+Description: You follow the twisting corridors, your mind racing with the knowledge that something terrible waits at the end. Finally, you reach a vast chamber, its walls lined with stone pillars,
+and the air is thick with ancient energy. In the center of the room, a massive altar stands, covered in dried blood and surrounded by symbols you’ve seen in the book. The ground here seems to thrum
+with power, as if it’s been waiting for you to arrive. As you step forward, your mind is flooded with visions of the past—of rituals performed here, sacrifices made to something older than time itself.
+This is no ordinary cabin, no ordinary home. The cabin was built atop an ancient temple, a place of dark worship, and you realize too late that you’ve been drawn here for a reason.
+
+Commands:
+"Investigate the altar"
+"Try to escape the labyrinth"
+"Confront whatever lurks in the shadows"
+
+Scene 14: The Temple's Secret
+Description: The altar holds an ancient, sealed box, its surface carved with more of the same symbols you’ve seen throughout the labyrinth. As you open the box, an overwhelming 
+sense of dread fills the room, and the ground shakes beneath you. A dark, ancient force begins to stir, its hunger greater than anything you’ve ever known. The temple was built 
+to contain this evil, but now it’s been released. The walls of the labyrinth begin to collapse, and the very foundation of the earth trembles. The book you found, the creatures, 
+the labyrinth, the cabin—it was all part of a much larger, darker design. The temple was not meant to keep the creatures out—it was meant to keep them in.
+
+Commands:
+"Seal the box"
+"Run for your life"
+"Fight the evil"
+
+Scene 15: The Final Choice
+Description: As the temple collapses around you, you realize the only way out is to confront the evil head-on. The creatures that once lurked in the darkness are now free, and
+they hunger for your blood. You’ve learned enough to know how to kill them, but can you do it before it’s too late? The fate of everyone is in your hands. Do you have the strength
+to destroy the evil at its source, or will you join the ranks of the damned?
+
+Commands:
+"Fight the creatures"
+"Escape the collapsing temple"
+"Sacrifice yourself to seal the evil away"
+
+With this structure, you're weaving in the vampire lore without explicitly naming them and keeping the tension building as the player uncovers more about the sinister nature of
+the cabin and the temple beneath it. The final scenes give the player the choice to either confront or escape the evil, allowing for a potentially tragic or victorious ending.
