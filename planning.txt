@@ -88,5 +88,7 @@ Commands:
 "Escape the collapsing temple"
 "Sacrifice yourself to seal the evil away"
 
+******** make then ending where the temple kinda collapse and sunlight is coming thru, killing them all ********
+
 With this structure, you're weaving in the vampire lore without explicitly naming them and keeping the tension building as the player uncovers more about the sinister nature of
 the cabin and the temple beneath it. The final scenes give the player the choice to either confront or escape the evil, allowing for a potentially tragic or victorious ending.
