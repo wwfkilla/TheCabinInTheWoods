@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
         hasFlashlight: false,
         hasKnife: false,
         hasAmmo: false,
-        hasShotgun: false   
+        hasShotgun: false,
+        hasBat: false
     };
 
     document.addEventListener('focusCommandInput', function() {
@@ -333,7 +334,49 @@ function typeWriter(text, callback) {
                         }
                         return handleInvalidCommand(); // Handle invalid commands
                     }
-                }
+                },
+        scene8: {
+                    description: "As you open the book, an uneasy chill runs down your spine, like icy fingers tracing the back of your neck. The pages are brittle, yellowed with age, and the ink is faded, as if the words themselves are reluctant to be read. What you can make out is unsettling: scrawled accounts of ancient creatures that rise from the darkness at night, their forms twisted and grotesque, feasting on the blood of the living. Their hunger is insatiable, their cruelty knows no bounds, and the descriptions are vivid enough to make your skin crawl—claws raking through flesh, eyes glowing like embers in the void, and whispers that echo in the silence before they strike. The air in the cabin grows heavier, the flickering light from the oil lamps casting shadows that seem to writhe across the walls, as if the book itself is summoning something from the edges of your vision.\n\nYou hesitate, your fingers trembling as they hover over the pages, but the book's pull is undeniable, like a siren's call laced with dread. The silence in the cabin is suffocating, broken only by the faint creak of the floorboards and the distant howl of the wind outside. Each word you read feels like a step deeper into a nightmare, and the book's grotesque binding—leather that looks disturbingly like human flesh—seems to pulse faintly under your touch.",
+                    commands: ['read more', 'put the book down', 'look for clues in the cabin'],
+                    onCommand: (command) => {
+                        if (command === 'read more') {
+                            return "You read of things that can kill them—garlic, silver, and a strange dark ritual—each described in detail, with an air of dread woven between the lines. One page describes a symbol that matches a carving you saw earlier on the cabin walls. Your eyes snap to it in a flash of realization: this place, this book, it's all connected to something ancient and terrifying.";
+                        }
+                        if (command === 'put the book down') {
+                            return "You drop the book, its weight hitting the floor with a dull thud, but the unease lingers, as if its words have already burrowed into your mind.";
+                        }
+                        if (command === 'look for clues in the cabin') {
+                            changeScene('scene9'); // Transition to Scene 9
+                            return; // Exit the function so invalid command handler isn't triggered
+                        }
+                        return handleInvalidCommand(); // Handle invalid commands
+                    }
+                },
+        scene9: {
+                    description: "The book's revelations linger in your mind, each word a splinter burrowing deeper into your thoughts. If you hadn't already let the book slip from your grasp in the dim light of the cabin, you clutch it tightly now, its grotesque cover cold against your palms, before setting it down with a shudder. As you try to shake off the unease, a shape moves outside the cabin window, its silhouette stark against the swirling snow. It's large, its movements swift and unnatural, like something not quite human—limbs too long, a gait too fluid, as if it defies the laws of flesh and bone. Your heart races, but the darkness and the storm make it hard to discern details, leaving only the impression of something wrong, something watching. You step closer to the window, your breath fogging the glass, and the cold seeps through, mingling with the dread pooling in your gut.\n\nThere's something out there, something that knows you're here, its presence pressing against the fragile barrier of the cabin walls. The hairs on the back of your neck stand up, a primal fear gripping you, whispering that you're trapped, caged in this decaying refuge. The silence inside is suffocating, broken only by the faint creak of the floorboards under your weight and the howling wind outside, which now sounds like a chorus of distant, mocking voices. The shape outside shifts again, a shadow among shadows, and you can't tell if it's circling the cabin or drawing closer, its intentions shrouded in the storm. Every instinct screams to act, to flee, to fight, but the cabin feels like a trap snapping shut, and the weight of its isolation presses down, leaving you to face whatever lurks beyond—or within—these walls.",
+                    commands: ['try to leave through the door', 'investigate the window', 'look for something to defend yourself'],
+                    onCommand: (command) => {
+                        if (command === 'try to leave through the door') {
+                            changeScene('scene10'); // Transition to Scene 10
+                            return; // Exit the function so invalid command handler isn't triggered
+                        }
+                        if (command === 'investigate the window') {
+                            return "The window seems blocked, the frame warped and frozen shut, as if the cabin itself is conspiring to keep you inside.";
+                        }
+                        if (command === 'look for something to defend yourself') {
+                            if (gameState.hasShotgun || gameState.hasKnife) {
+                                let equipped = [];
+                                if (gameState.hasShotgun) equipped.push("shotgun");
+                                if (gameState.hasKnife) equipped.push("knife");
+                                return `You check your inventory and feel a grim reassurance—you're well-equipped with ${equipped.join(" and ")}. Whatever's out there, you'll face it armed.`;
+                            } else {
+                                gameState.hasBat = true; // Add baseball bat to inventory
+                                return "You scramble through the cabin, desperation guiding your hands, and find a weathered baseball bat leaning against the wall. It's heavy, solid, and might just keep you alive.";
+                            }
+                        }
+                        return handleInvalidCommand(); // Handle invalid commands
+                    }
+                },        
         };
     
 
