@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
         hasKnife: false,
         hasAmmo: false,
         hasShotgun: false,
-        hasBat: false
+        hasBat: false,
+        defenseChecked: false,
     };
 
     document.addEventListener('focusCommandInput', function() {
@@ -129,7 +130,7 @@ function typeWriter(text, callback) {
                                  showCommands(nodes['titleScreen'].commands);
                                  return;
                              }
-                             return handleInvalidCommand();
+                            return handleInvalidCommand();
                          }
                      },
         scene1: {
@@ -285,8 +286,8 @@ function typeWriter(text, callback) {
                     commands: ['investigate jars', 'look at workbench', 'go back up'],
                     onCommand: (command) => {
                         if (command === 'investigate jars') {
-                            gameState.hasAmmo = true; // Add ammo to inventory
-                            return "You peer closer at the jars, expecting to find something gruesome, but instead, you see only canned soup and vegetables. However, tucked behind one of the jars, you find some shotgun ammo.";
+                            gameState.hasGarlic = true; // Add garlic to inventory
+                            return "You peer closer at the jars, expecting to find something gruesome, but instead, you see only canned soup and vegetables. However, tucked behind one of the jars, you find a small jar of garlic cloves.";
                         }
                         if (command === 'look at workbench') {
                             gameState.hasKnife = true; // Add knife to inventory
@@ -311,7 +312,8 @@ function typeWriter(text, callback) {
                             return "Your hands brush against cold metal, possibly tools. You feel something sharp and pull out a knife that was stuck in the bench top.";
                         }
                         if (command === 'touch shelves') {
-                            return "You run your hands over the shelves, feeling various shapes of jars and cans, but nothing unusual or useful.";
+                            gameState.hasGarlic = true; // Add garlic to inventory
+                            return "You run your hands over the shelves, feeling various shapes of jars and cans. One jar feels familiar—it's a small jar of garlic cloves. You've added it to your inventory.";
                         }
                         if (command === 'go back up') {
                             if (gameState.hasAmmo) {
@@ -322,7 +324,7 @@ function typeWriter(text, callback) {
                             return; // Exit the function so invalid command handler isn't triggered
                         }
                     }
-                },
+                },                
         scene7c: {
                     description: "After your exploration in the basement, you make your way back up through the trapdoor, pulling yourself back into the cabin. As you stand, your eyes catch something new - a shotgun resting atop the fireplace. It seems like fate or perhaps someone's oversight left it there for you. You secure the shotgun, checking to see if it's loaded. It's not, but you've found ammo, so you load it up. It feels reassuring in your hands.",
                     commands: ['continue exploring'], // This should match what's checked in onCommand
@@ -335,7 +337,7 @@ function typeWriter(text, callback) {
                         return handleInvalidCommand(); // Handle invalid commands
                     }
                 },
-        scene8: {
+                scene8: {
                     description: "As you open the book, an uneasy chill runs down your spine, like icy fingers tracing the back of your neck. The pages are brittle, yellowed with age, and the ink is faded, as if the words themselves are reluctant to be read. What you can make out is unsettling: scrawled accounts of ancient creatures that rise from the darkness at night, their forms twisted and grotesque, feasting on the blood of the living. Their hunger is insatiable, their cruelty knows no bounds, and the descriptions are vivid enough to make your skin crawl—claws raking through flesh, eyes glowing like embers in the void, and whispers that echo in the silence before they strike. The air in the cabin grows heavier, the flickering light from the oil lamps casting shadows that seem to writhe across the walls, as if the book itself is summoning something from the edges of your vision.\n\nYou hesitate, your fingers trembling as they hover over the pages, but the book's pull is undeniable, like a siren's call laced with dread. The silence in the cabin is suffocating, broken only by the faint creak of the floorboards and the distant howl of the wind outside. Each word you read feels like a step deeper into a nightmare, and the book's grotesque binding—leather that looks disturbingly like human flesh—seems to pulse faintly under your touch.",
                     commands: ['read more', 'put the book down', 'look for clues in the cabin'],
                     onCommand: (command) => {
@@ -346,37 +348,114 @@ function typeWriter(text, callback) {
                             return "You drop the book, its weight hitting the floor with a dull thud, but the unease lingers, as if its words have already burrowed into your mind.";
                         }
                         if (command === 'look for clues in the cabin') {
-                            changeScene('scene9'); // Transition to Scene 9
-                            return; // Exit the function so invalid command handler isn't triggered
+                            if (gameState.hasKnife && gameState.hasGarlic) {
+                                gameState.defenseChecked = true; // Set defenseChecked to true
+                                changeScene('scene9'); // Transition to scene 9 if the player has both the knife and garlic
+                            } else {
+                                changeScene('scene9'); // Go to scene 9 without setting defenseChecked if the player has only garlic
+                            }
+                            return; // Prevent further command processing after scene transition
                         }
                         return handleInvalidCommand(); // Handle invalid commands
                     }
                 },
+                
         scene9: {
                     description: "The book's revelations linger in your mind, each word a splinter burrowing deeper into your thoughts. If you hadn't already let the book slip from your grasp in the dim light of the cabin, you clutch it tightly now, its grotesque cover cold against your palms, before setting it down with a shudder. As you try to shake off the unease, a shape moves outside the cabin window, its silhouette stark against the swirling snow. It's large, its movements swift and unnatural, like something not quite human—limbs too long, a gait too fluid, as if it defies the laws of flesh and bone. Your heart races, but the darkness and the storm make it hard to discern details, leaving only the impression of something wrong, something watching. You step closer to the window, your breath fogging the glass, and the cold seeps through, mingling with the dread pooling in your gut.\n\nThere's something out there, something that knows you're here, its presence pressing against the fragile barrier of the cabin walls. The hairs on the back of your neck stand up, a primal fear gripping you, whispering that you're trapped, caged in this decaying refuge. The silence inside is suffocating, broken only by the faint creak of the floorboards under your weight and the howling wind outside, which now sounds like a chorus of distant, mocking voices. The shape outside shifts again, a shadow among shadows, and you can't tell if it's circling the cabin or drawing closer, its intentions shrouded in the storm. Every instinct screams to act, to flee, to fight, but the cabin feels like a trap snapping shut, and the weight of its isolation presses down, leaving you to face whatever lurks beyond—or within—these walls.",
-                    commands: ['try to leave through the door', 'investigate the window', 'look for something to defend yourself'],
+                    commands: ['try to leave through the door', 'investigate the window', 'look for something to defend myself'],
                     onCommand: (command) => {
+                        console.log(`Current scene: ${gameState.currentNode}`);
+                        console.log(`Received command: ${command}`);
                         if (command === 'try to leave through the door') {
-                            changeScene('scene10'); // Transition to Scene 10
-                            return; // Exit the function so invalid command handler isn't triggered
+                            if (gameState.defenseChecked) {
+                                if (gameState.hasGarlic && gameState.hasKnife) {
+                                    changeScene('scene10a'); // Transition to Scene 10a if player has garlic and knife
+                                } else if (gameState.hasGarlic && gameState.hasBat) {
+                                    changeScene('scene10b'); // Transition to Scene 10b if player has garlic and bat
+                                } else if (gameState.hasBat) {
+                                    changeScene('scene10c'); // Transition to Scene 10c if player has bat
+                                } else {
+                                    return "You need something to defend yourself before leaving the cabin.";
+                                }
+                            } else {
+                                return "You must first look around for something to defend yourself with.";
+                            }
                         }
                         if (command === 'investigate the window') {
                             return "The window seems blocked, the frame warped and frozen shut, as if the cabin itself is conspiring to keep you inside.";
                         }
-                        if (command === 'look for something to defend yourself') {
-                            if (gameState.hasShotgun || gameState.hasKnife) {
-                                let equipped = [];
-                                if (gameState.hasShotgun) equipped.push("shotgun");
-                                if (gameState.hasKnife) equipped.push("knife");
-                                return `You check your inventory and feel a grim reassurance—you're well-equipped with ${equipped.join(" and ")}. Whatever's out there, you'll face it armed.`;
-                            } else {
-                                gameState.hasBat = true; // Add baseball bat to inventory
+                        if (command === 'look for something to defend myself') {
+                            if (gameState.defenseChecked) {
+                                return "You are well equipped and feel ready to try your luck outside.";
+                            }
+                            if (gameState.hasGarlic) {
+                                gameState.hasBat = true; // Add bat to inventory
+                                gameState.defenseChecked = true; // Set defenseChecked to true
                                 return "You scramble through the cabin, desperation guiding your hands, and find a weathered baseball bat leaning against the wall. It's heavy, solid, and might just keep you alive.";
                             }
+                            gameState.hasBat = true; // Add bat to inventory if no knife or garlic
+                            gameState.defenseChecked = true;
+                            return "You scramble through the cabin, desperation guiding your hands, and find a weathered baseball bat leaning against the wall. It's heavy, solid, and might just keep you alive.";
                         }
                         return handleInvalidCommand(); // Handle invalid commands
                     }
-                },        
+                },
+                
+
+        scene10a: {
+                    description: "As you're about to open the door, the door bursts open, and a dark figure lunges at you. Its eyes glow with a predatory hunger, its fangs bared. You barely manage to step back as it reaches for your throat. Panic surges through your veins. In a panic, you grab the knife and stab at the creature, but the blade slides off its leathery skin, ineffective against its unnatural form. The creature hisses in anger, its eyes narrowing as it lunges again. Then, in the chaos, your eyes lock on the jar of garlic on the floor. Without hesitation, you hurl it at the creature. It recoils with a deafening hiss, its skin blistering as the scent burns it. With a final shriek, the creature collapses to the floor, its body disintegrating into ash.",
+                    commands: ['close the door', 'look around the cabin for more clues', 'go back to the basement'],
+                    onCommand: (command) => {
+                        if (command === 'close the door') {
+                            return "You slam the door shut, making sure the threat is over.";
+                        }
+                        if (command === 'look around the cabin for more clues') {
+                            changeScene('scene11');
+                            return;
+                        }
+                        if (command === 'go back to the basement') {
+                            return "The basement has nothing left for you; you might want to look around the cabin for more clues.";
+                        }
+                        return handleInvalidCommand(); // Handle invalid commands
+                    }
+                },
+        scene10b: {
+                    description: "The door bursts open, and a dark figure lunges at you. Its eyes glow with a predatory hunger, its fangs bared. You stumble back as the creature reaches for your throat. Panic surges through your veins. In the chaos, you scramble to grab something to defend yourself. Your hands land on the weathered baseball bat you found earlier, and you swing it at the creature. It deflects the blow, but you don't give up. Desperation grips you, and you hurl a jar of garlic at it. The creature recoils with a deafening hiss, its skin blistering as the scent burns it. With a final shriek, the creature collapses to the floor, its body disintegrating into ash.",
+                    commands: ['close the door', 'look around the cabin for more clues', 'go back to the basement'],
+                    onCommand: (command) => {
+                        if (command === 'close the door') {
+                            return "You slam the door shut, making sure the threat is over.";
+                        }
+                        if (command === 'look around the cabin for more clues') {
+                            changeScene('scene11');
+                            return;
+                        }
+                        if (command === 'go back to the basement') {
+                            return "The basement has nothing left for you; you might want to look around the cabin for more clues.";
+                        }
+                        return handleInvalidCommand(); // Handle invalid commands
+                    }
+                },
+        scene10c: {
+                    description: "The door bursts open, and a dark figure lunges at you. Its eyes glow with a predatory hunger, its fangs bared. You barely manage to step back as it reaches for your throat. Panic surges through your veins. With no other option, you grab the weathered baseball bat that you found earlier and swing it with all your might. The blow connects, sending the creature staggering back. But the creature is relentless, and it charges again. As a final act of desperation, you take one more swing, hitting it squarely in the head. With a sickening crunch, the vampire's body disintegrates into ash, its monstrous form collapsing to the floor.",
+                    commands: ['close the door', 'look around the cabin for more clues', 'go back to the basement'],
+                    onCommand: (command) => {
+                        if (command === 'close the door') {
+                            return "You slam the door shut, making sure the threat is over.";
+                        }
+                        if (command === 'look around the cabin for more clues') {
+                            changeScene('scene11');
+                            return;
+                        }
+                        if (command === 'go back to the basement') {
+                            return "The basement has nothing left for you; you might want to look around the cabin for more clues.";
+                        }
+                        return handleInvalidCommand(); // Handle invalid commands
+                    }
+                },
+                    
+                
+
         };
     
 
@@ -389,29 +468,30 @@ function changeScene(nodeKey) {
     if (node) {
         console.log("Scene found, changing...");
         console.log("Scene description: ", node.description); // Add this line for debugging
-        clearChat();
+        clearChat(); // Clear previous output
         if (node.description) {
             if (nodeKey === 'titleScreen') {
                 appendOutput(node.description); // Directly append description for titleScreen
-                showCommands(node.commands);
+                showCommands(node.commands); // Show titleScreen commands
                 gameState.currentNode = nodeKey;
             } else {
                 typeWriter(node.description, () => {
-                    showCommands(node.commands);
-                    gameState.currentNode = nodeKey;
+                    showCommands(node.commands); // Update commands for the new scene
+                    gameState.currentNode = nodeKey; // Update the current scene
                 });
             }
         } else {
             console.error("Error: Scene description for '" + nodeKey + "' is undefined.");
             appendOutput("Error: Scene description is missing. Please choose another action.");
-            showCommands(nodes[gameState.currentNode].commands); // Show commands of the current scene again
+            showCommands(nodes[gameState.currentNode].commands); // Show previous scene commands
         }
     } else {
         console.error("Error: Scene '" + nodeKey + "' does not exist.");
         appendOutput("Error: This scene does not exist. Please choose another action.");
-        showCommands(nodes[gameState.currentNode].commands); // Show commands of the current scene again
+        showCommands(nodes[gameState.currentNode].commands); // Show previous scene commands
     }
 }
+
 
 // Function to handle invalid commands
 function handleInvalidCommand() {
